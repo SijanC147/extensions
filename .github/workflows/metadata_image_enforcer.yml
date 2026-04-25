@@ -33,7 +33,7 @@ jobs:
           {
             echo "metadata_count=$(printf '%s\n' "$metadata_paths" | sed '/^$/d' | wc -l | tr -d ' ')"
             echo "sparse_paths<<EOF"
-            echo "Scripts"
+            echo "scripts"
             printf '%s\n' "$metadata_paths"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
@@ -56,4 +56,4 @@ jobs:
       - name: Validate metadata images
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python3 Scripts/check_metadata_images.py
+        run: python3 scripts/check_metadata_images.py
