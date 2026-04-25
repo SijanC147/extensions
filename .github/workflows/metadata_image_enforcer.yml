@@ -1,0 +1,59 @@
+name: "Metadata Image Enforcer"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "extensions/**/metadata/**"
+    branches: [main, master]
+
+jobs:
+  metadata-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve sparse checkout paths
+        id: sparse_paths
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          metadata_paths=$(gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --json files | jq -r '
+            .files[]
+            | select(
+                (.path | test("^extensions/[^/]+/metadata/.+"))
+                and ((.path | endswith(".png")) or (.path | endswith(".jpg")) or (.path | endswith(".jpeg")) or (.path | endswith(".webp")) or (.path | endswith(".gif")) or (.path | endswith(".bmp")))
+              )
+            | .path
+          ' | sort)
+
+          if [[ -z "$metadata_paths" ]]; then
+            echo "Workflow triggered without changed metadata images in the PR." >&2
+            exit 1
+          fi
+
+          {
+            echo "metadata_count=$(printf '%s\n' "$metadata_paths" | sed '/^$/d' | wc -l | tr -d ' ')"
+            echo "sparse_paths<<EOF"
+            echo "Scripts"
+            printf '%s\n' "$metadata_paths"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: ${{ steps.sparse_paths.outputs.sparse_paths }}
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install validator dependencies
+        run: python3 -m pip install --disable-pip-version-check numpy pillow
+
+      - name: Validate metadata images
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 Scripts/check_metadata_images.py
