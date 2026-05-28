@@ -43,7 +43,7 @@ export function useRecentEntries() {
       await saveEntries(parsedEntries.filter((currentEntry) => !isSameEntry(currentEntry, entry)));
       await revalidate();
       showToast(Toast.Style.Success, "Entry removed", `Restart Cursor to sync the list in Cursor (optional)`);
-    } catch (error) {
+    } catch {
       showToast(Toast.Style.Failure, "Failed to remove entry");
     }
   }
@@ -69,7 +69,7 @@ export function useRecentEntries() {
         await revalidate();
         showToast(Toast.Style.Success, "All entries removed", `Restart Cursor to sync the list in Cursor (optional)`);
       }
-    } catch (error) {
+    } catch {
       showToast(Toast.Style.Failure, "Failed to remove entries");
     }
   }

@@ -32,7 +32,7 @@ export interface GalleryQueryResult {
 
 export interface Result {
   extensions: GalleryExtension[];
-  pagingToken: any;
+  pagingToken: unknown;
   resultMetadata: ResultMetadaum[];
 }
 
@@ -160,7 +160,7 @@ function GalleryExtensionListItem(props: {
             <OpenExtensionByIDInBrowserAction extensionID={getFullExtensionID(e)} />
             <Action.CopyToClipboard
               content={getFullExtensionID(e)}
-              title="Copy Extension Id"
+              title="Copy Extension ID"
               shortcut={{ modifiers: ["cmd", "shift"], key: "." }}
             />
           </ActionPanel.Section>

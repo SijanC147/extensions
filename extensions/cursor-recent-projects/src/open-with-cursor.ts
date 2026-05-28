@@ -1,6 +1,7 @@
-import { showToast, Toast, open, closeMainWindow, getSelectedFinderItems, getFrontmostApplication } from "@raycast/api";
+import { showToast, Toast, closeMainWindow, getSelectedFinderItems, getFrontmostApplication } from "@raycast/api";
 import { runAppleScript } from "@raycast/utils";
 import { getCurrentFinderPath } from "./utils/apple-scripts";
+import { openProjectWithCursor } from "./lib/cursor";
 
 // Function to get selected Path Finder items
 const getSelectedPathFinderItems = async () => {
@@ -33,10 +34,10 @@ export default async function main() {
     if (selectedItems.length === 0) {
       const currentPath = await getCurrentFinderPath();
       if (currentPath.length === 0) throw new Error("Not a valid directory");
-      await open(currentPath, "Cursor");
+      openProjectWithCursor(currentPath);
     } else {
       for (const item of selectedItems) {
-        await open(item.path, "Cursor");
+        openProjectWithCursor(item.path);
       }
     }
 
