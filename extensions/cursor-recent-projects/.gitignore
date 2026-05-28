@@ -8,11 +8,3 @@ raycast-env.d.ts
 
 # misc
 .DS_Store
-.serena/
-
-# oh-my-claudecode: ignore ephemeral artifacts (state, sessions, logs, caches),
-# keep project skills trackable (canonical OMC pattern)
-!.omc/
-.omc/*
-!.omc/skills/
-!.omc/skills/**
