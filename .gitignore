@@ -180,11 +180,3 @@ bun.lock
 scripts/internal/**
 .claude**
 .cursor/**
-
-# oh-my-claudecode: ignore ephemeral artifacts (state, sessions, logs, caches),
-# keep project skills trackable (canonical OMC pattern)
-!.omc/
-.omc/*
-!.omc/skills/
-!.omc/skills/**
-.serena/
