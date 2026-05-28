@@ -1,9 +1,10 @@
 import { createContext, useContext, ReactNode } from "react";
-import { open, showHUD } from "@raycast/api";
+import { showHUD } from "@raycast/api";
 import { run } from "../integrations/cursor-directory";
 import { runAppleScriptSync } from "run-applescript";
 import { LaunchContext } from "../integrations/types";
 import { callbackLaunchCommand } from "raycast-cross-extension";
+import { openProjectWithCursor } from "../lib/cursor";
 
 interface ProjectContextType {
   openProject: (uri: string, closeOtherWindows: boolean) => Promise<void>;
@@ -25,7 +26,7 @@ export function ProjectProvider({ children, launchContext }: { children: ReactNo
             end tell
             `);
       }
-      await open(uri, "Cursor");
+      openProjectWithCursor(uri);
 
       const { cursorDirectory, callbackLaunchOptions } = launchContext || {};
 

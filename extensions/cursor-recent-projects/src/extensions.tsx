@@ -42,7 +42,7 @@ function ExtensionListItem(props: { extension: Extension; reloadExtension: () =>
           <ActionPanel.Section>
             <Action.CopyToClipboard
               content={e.id}
-              title="Copy Extension Id"
+              title="Copy Extension ID"
               shortcut={{ modifiers: ["cmd", "shift"], key: "." }}
             />
             {e.publisherDisplayName && (
@@ -93,7 +93,7 @@ export function useLocalExtensions(): {
   const [isLoading, setIsLoading] = useState(true);
   const [extensions, setExtensions] = useState<Extension[]>();
   const [error, setError] = useState<string>();
-  const [date, setDate] = useState(new Date());
+  const [, setDate] = useState(new Date());
 
   const refresh = () => {
     setDate(new Date());

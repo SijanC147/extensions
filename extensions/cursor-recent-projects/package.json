@@ -1,6 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "cursor-recent-projects",
+  "owner": "sb23",
   "title": "Cursor",
   "description": "Control Cursor directly from Raycast - Search and open recent projects, handle extensions and commands.",
   "icon": "cursor-icon.png",
@@ -124,6 +125,22 @@
       "label": "Git Branch Color",
       "default": "",
       "description": "Hexadecimal color code for Git branch tag (e.g., #00FF00). Leave empty to use default green"
+    },
+    {
+      "name": "cursorPath",
+      "type": "textfield",
+      "title": "Cursor CLI Path",
+      "required": false,
+      "default": "",
+      "description": "Absolute path to the Cursor CLI binary used when opening projects. Leave empty for default (/Applications/Cursor.app/Contents/Resources/app/bin/cursor)."
+    },
+    {
+      "name": "extraCursorArgs",
+      "type": "textfield",
+      "title": "Extra Cursor Arguments",
+      "required": false,
+      "default": "",
+      "description": "Space-separated CLI flags injected when opening a project (e.g. --remote-debugging-port=9123). Leave empty for none."
     }
   ],
   "dependencies": {
@@ -135,12 +152,12 @@
     "tildify": "^3.0.0"
   },
   "devDependencies": {
-    "@raycast/eslint-config": "1.0.5",
+    "@raycast/eslint-config": "^2.1.1",
     "@types/lodash.get": "^4.4.9",
     "@types/node": "20.12.7",
     "@types/react": "18.2.79",
     "@types/sql.js": "^1.4.9",
-    "eslint": "^8.57.1",
+    "eslint": "^9.9.1",
     "eslint-plugin-react": "^7.36.1",
     "prettier": "^2.8.8",
     "typescript": "^5.6.2"

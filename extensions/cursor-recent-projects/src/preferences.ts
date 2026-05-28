@@ -8,3 +8,5 @@ export const closeOtherWindows = preferences.closeOtherWindows;
 export const terminalApp = preferences.terminalApp;
 export const showGitBranch = preferences.showGitBranch;
 export const gitBranchColor = preferences.gitBranchColor;
+export const cursorPath = preferences.cursorPath;
+export const extraCursorArgs = preferences.extraCursorArgs;
