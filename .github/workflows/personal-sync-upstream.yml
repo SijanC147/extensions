@@ -1,0 +1,69 @@
+name: Personal — Sync upstream
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # 09:00 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout personal branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: personal/remote-debugging
+
+      - name: Configure git and upstream
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add upstream https://github.com/raycast/extensions.git
+          git fetch upstream main --depth=200
+
+      - name: Attempt rebase
+        id: rebase
+        run: |
+          set +e
+          git rebase upstream/main
+          rc=$?
+          if [ $rc -eq 0 ]; then
+            echo "result=clean" >> "$GITHUB_OUTPUT"
+          else
+            git rebase --abort || true
+            echo "result=conflict" >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
+
+      - name: Push on clean rebase
+        if: steps.rebase.outputs.result == 'clean'
+        run: git push --force-with-lease origin personal/remote-debugging
+
+      - name: Open draft PR on conflict
+        if: steps.rebase.outputs.result == 'conflict'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BRANCH="sync/$(date +%Y%m%d-%H%M)"
+          git checkout -B "$BRANCH" upstream/main
+          git push origin "$BRANCH" --force
+          gh pr create --draft \
+            --title "chore: upstream sync needs manual merge ($(date +%Y-%m-%d))" \
+            --body "Auto-sync detected conflicts rebasing \`personal/remote-debugging\` onto \`upstream/main\`. Resolve locally:
+
+          \`\`\`zsh
+          cd ~/Code/raycast-dev/cursor-recent-projects-fork/raycast-extensions
+          git fetch upstream
+          git checkout personal/remote-debugging
+          git rebase upstream/main
+          # resolve conflicts, then:
+          git push --force-with-lease origin personal/remote-debugging
+          gh pr close --delete-branch $BRANCH
+          \`\`\`" \
+            --base personal/remote-debugging \
+            --head "$BRANCH"
