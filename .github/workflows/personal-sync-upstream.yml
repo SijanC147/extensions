@@ -52,7 +52,7 @@ jobs:
           BRANCH="sync/$(date +%Y%m%d-%H%M)"
           git checkout -B "$BRANCH" upstream/main
           git push origin "$BRANCH" --force
-          gh pr create --draft \
+          gh pr create --repo "${GITHUB_REPOSITORY}" --draft \
             --title "chore: upstream sync needs manual merge ($(date +%Y-%m-%d))" \
             --body "Auto-sync detected conflicts rebasing \`personal/remote-debugging\` onto \`upstream/main\`. Resolve locally:
 
